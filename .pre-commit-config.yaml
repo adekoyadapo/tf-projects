@@ -4,18 +4,8 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
-        # args:
-        #   - markdown
-        #   - --output-file README.md
-        #   - --output-mode inject
-        # files: |
-        #   ^aws/eks-cluster/.*
-        #   ^az/base/.*
-        #   ^eck-llm/.*
-        #   ^gcp/base/.*
-        #   ^gcp/bastion/.*
-        #   ^gcp/cloudrun/.*
-        #   ^gcp/cloudrun_lb/.*
-        #   ^gcp/cloudrun_svc/.*
-        #   ^gcp/gke/.*
-        # stages: [pre-commit, manual]
+        args:
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+          - --hook-config=--use-standard-markers=true
