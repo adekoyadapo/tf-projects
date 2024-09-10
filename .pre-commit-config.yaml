@@ -1,0 +1,21 @@
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.94.3  # Use the latest stable version or the specific version you need
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_docs
+        # args:
+        #   - markdown
+        #   - --output-file README.md
+        #   - --output-mode inject
+        # files: |
+        #   ^aws/eks-cluster/.*
+        #   ^az/base/.*
+        #   ^eck-llm/.*
+        #   ^gcp/base/.*
+        #   ^gcp/bastion/.*
+        #   ^gcp/cloudrun/.*
+        #   ^gcp/cloudrun_lb/.*
+        #   ^gcp/cloudrun_svc/.*
+        #   ^gcp/gke/.*
+        # stages: [pre-commit, manual]
