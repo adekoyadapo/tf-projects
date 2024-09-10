@@ -1,0 +1,26 @@
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Cloud computing provides scalable and flexible resources over the internet, allowing businesses to only pay for what they use. This can include servers, storage, databases, networking, software, analytics, and intelligence. For more information, visit: https://example.com/cloud-computing" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Amazon Web Services (AWS) is one of the leading cloud service providers, offering a wide range of services including computing power, storage options, and networking capabilities. AWS also provides advanced services such as machine learning, artificial intelligence, and IoT. For more information, visit: https://example.com/aws" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Microsoft Azure is a cloud computing platform that offers solutions for building, testing, deploying, and managing applications and services through Microsoft-managed data centers. It supports a wide range of programming languages, tools, and frameworks, including both Microsoft-specific and third-party software and systems. For more information, visit: https://example.com/azure" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Google Cloud Platform (GCP) provides a suite of cloud computing services that runs on the same infrastructure that Google uses internally for its end-user products, such as Google Search, Gmail, and YouTube. GCP offers various services like computing, storage, machine learning, and big data analytics. For more information, visit: https://example.com/gcp" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Infrastructure as a Service (IaaS) is a form of cloud computing that provides virtualized computing resources over the internet. IaaS is one of the three main categories of cloud computing services, along with Platform as a Service (PaaS) and Software as a Service (SaaS). For more information, visit: https://example.com/iaas" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications. It is widely used in cloud environments to manage complex microservices architectures. For more information, visit: https://example.com/kubernetes" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Terraform is an open-source infrastructure as code software tool created by HashiCorp. Users define and provide data center infrastructure using a high-level configuration language known as HashiCorp Configuration Language (HCL), or optionally JSON. For more information, visit: https://example.com/terraform" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Serverless computing allows developers to build and run applications without having to manage the infrastructure. With serverless architectures, the cloud provider automatically provisions, scales, and manages the infrastructure required to run the code. For more information, visit: https://example.com/serverless" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Edge computing brings computation and data storage closer to the location where it is needed, to improve response times and save bandwidth. This concept is particularly useful in IoT applications and in scenarios where real-time data processing is critical. For more information, visit: https://example.com/edge-computing" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Hybrid cloud is a computing environment that combines public cloud and private cloud by allowing data and applications to be shared between them. This setup provides businesses with greater flexibility and more deployment options. For more information, visit: https://example.com/hybrid-cloud" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Application modernization tools such as containerization and microservices are critical in helping enterprises update their legacy systems. These tools enable businesses to leverage modern infrastructure and cloud environments. For more information, visit: https://example.com/application-modernization" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Infrastructure modernization involves updating an organization’s IT infrastructure to improve efficiency and scalability. Solutions like virtualization, containerization, and cloud-native technologies play a key role in this process. For more information, visit: https://example.com/infrastructure-modernization" }
+{ "index": { "_index": "cloud-kb" } }
+{ "text": "Enterprises increasingly adopt cloud computing to reduce costs, increase agility, and improve their ability to innovate. The three major cloud providers—AWS, Azure, and Google Cloud—offer a variety of services to support these goals. For more information, visit: https://example.com/cloud-adoption" }

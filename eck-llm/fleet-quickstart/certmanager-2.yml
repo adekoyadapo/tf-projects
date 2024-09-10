@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-cert
+spec:
+  secretName: wildcard-tls-secret
+  issuerRef:
+    name: selfsigned-issuer
+  commonName: "*.sslip.io"
+  dnsNames:
+  - "*.sslip.io"

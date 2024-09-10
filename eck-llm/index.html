@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My RUM Example</title>
+    <script src="https://unpkg.com/@elastic/apm-rum@latest/dist/bundles/elastic-apm-rum.umd.min.js"></script>
+</head>
+<body>
+    <h1>Hello, RUM!</h1>
+    <button id="error-button">Click me to generate an error</button>
+    <script>
+        // Initialize the RUM agent
+        var apm = elasticApm.init({
+            serviceName: 'my-rum-service',
+            serverUrl: 'http://apm.192-168-105-4.sslip.io',
+            serviceVersion: '1.0.0',
+            logLevel: 'debug'
+        });
+        // Example function that will throw an error
+        function throwError() {
+            throw new Error('Oops! Something went wrong.');
+        }
+        // Attach an event listener to the button to generate an error
+        document.getElementById('error-button').addEventListener('click', function() {
+            throwError();
+        });
+    </script>
+</body>
+</html>

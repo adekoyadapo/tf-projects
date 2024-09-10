@@ -1,0 +1,9 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: elastic-credentials
+stringData:
+  users: |-
+    ${username}:${password}
+  users_roles: |-
+    superuser:${username}
