@@ -43,7 +43,7 @@
 | <a name="input_cloud_id"></a> [cloud\_id](#input\_cloud\_id) | Cloud ID value | `string` | n/a | yes |
 | <a name="input_container_port"></a> [container\_port](#input\_container\_port) | Container port | `number` | `8501` | no |
 | <a name="input_es_api_key"></a> [es\_api\_key](#input\_es\_api\_key) | Elasticsearch API Key value | `string` | n/a | yes |
-| <a name="input_iap_brand_name"></a> [iap\_brand\_name](#input\_iap\_brand\_name) | IAP Brand Name value | `string` | `"projects/881345020217/brands/881345020217"` | no |
+| <a name="input_iap_brand_name"></a> [iap\_brand\_name](#input\_iap\_brand\_name) | IAP Brand Name value - format: projects/{project\_number}/brands/{brand\_id} | `string` | n/a | yes |
 | <a name="input_iap_email"></a> [iap\_email](#input\_iap\_email) | IAP Email value | `string` | `"ade.adekoya@elastic.co"` | no |
 | <a name="input_iap_oauth2_client_name"></a> [iap\_oauth2\_client\_name](#input\_iap\_oauth2\_client\_name) | IAP OAuth2 Client Name value | `string` | `"iap-client-cloudrun"` | no |
 | <a name="input_image_url"></a> [image\_url](#input\_image\_url) | The container image URL | `string` | n/a | yes |

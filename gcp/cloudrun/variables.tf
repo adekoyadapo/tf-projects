@@ -60,9 +60,8 @@ variable "container_port" {
 }
 
 variable "iap_brand_name" {
-  description = "IAP Brand Name value"
+  description = "IAP Brand Name value - format: projects/{project_number}/brands/{brand_id}"
   type        = string
-  default     = "projects/881345020217/brands/881345020217"
 }
 
 variable "iap_email" {
