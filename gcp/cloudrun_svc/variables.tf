@@ -8,7 +8,7 @@ variable "region" {
 
 variable "prefix" {
   type    = string
-  default = "privarte"
+  default = "private"
 }
 
 variable "labels" {
@@ -44,13 +44,17 @@ variable "network_name" {
 
 variable "subnets" {
   type = map(object({
-    name = string
-    cidr = string
+    name        = string
+    cidr        = string
+    description = optional(string)
+    purpose     = optional(string)
   }))
   default = {
     "demo" = {
-      name = "demo"
-      cidr = "10.0.10.0/24"
+      name        = "demo"
+      cidr        = "10.0.10.0/24"
+      description = "demo subnet"
+      purpose     = "INTERNAL_HTTPS_LOAD_BALANCER"
     }
   }
 }

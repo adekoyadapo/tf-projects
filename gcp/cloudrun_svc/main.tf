@@ -1,59 +1,20 @@
-module "lb-http" {
-  source  = "terraform-google-modules/lb-http/google//modules/serverless_negs"
-  version = "11.0.0"
-
-  name    = "${var.prefix}-lb"
-  project = var.project
-  labels  = var.labels
-
-  backends = {
-    default = {
-      description = "Cloudrun services"
-      groups = [
-        {
-          group = google_compute_region_network_endpoint_group.serverless_neg.id
-        }
-      ]
-      enable_cdn = false
-
-      iap_config = {
-        enable = false
-      }
-      log_config = {
-        enable = false
-        # sample_rate = 0.5
-      }
-    }
-  }
-}
-
-data "google_project" "project" {
-  project_id = var.project
-}
-
-
-resource "google_compute_region_network_endpoint_group" "serverless_neg" {
-  provider              = google-beta
-  name                  = "${var.prefix}-serverless-neg"
-  network_endpoint_type = "SERVERLESS"
-  region                = var.region
-  project               = var.project
-  cloud_run {
-    service = google_cloud_run_v2_service.main.name
-  }
-}
-
 resource "google_cloud_run_v2_service" "main" {
   name     = "${var.prefix}-cloudrun"
   location = var.region
   project  = var.project
-  ingress  = "INGRESS_TRAFFIC_ALL" #"INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
+  ingress  = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 
   template {
     scaling {
       min_instance_count = 0
       max_instance_count = 1
     }
+    # vpc_access {
+    #   network_interfaces {
+    #     network    = module.vpc.network_name
+    #     subnetwork = [for i, j in module.subnets.subnets : j.name][1]
+    #   }
+    # }
     containers {
       image = var.image_url
 
@@ -99,7 +60,7 @@ resource "google_cloud_run_v2_service_iam_member" "public-access" {
   project  = google_cloud_run_v2_service.main.project
   name     = google_cloud_run_v2_service.main.name
   role     = "roles/run.invoker"
-  member   = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-iap.iam.gserviceaccount.com"
+  member   = "allUsers"
 }
 
 module "bucket" {
@@ -120,6 +81,7 @@ module "bucket" {
   }]
 }
 
+
 data "terraform_remote_state" "local" {
   backend = "local"
   config = {
@@ -127,90 +89,95 @@ data "terraform_remote_state" "local" {
   }
 }
 
-
-# module "vpc" {
-#   source  = "terraform-google-modules/network/google//modules/vpc"
-#   version = "~> 9.1"
-
-#   project_id   = var.project
-#   network_name = var.network_name
-# }
+data "google_project" "project" {
+  project_id = var.project
+}
 
 
-# module "subnets" {
-#   source  = "terraform-google-modules/network/google//modules/subnets"
-#   version = "~> 9.1"
+module "vpc" {
+  source  = "terraform-google-modules/network/google//modules/vpc"
+  version = "~> 9.1"
 
-#   project_id   = var.project
-#   network_name = module.vpc.network_name
+  project_id   = var.project
+  network_name = var.network_name
+}
 
-#   subnets = [for i in var.subnets :
-#     {
-#       subnet_name           = i.name
-#       subnet_ip             = i.cidr
-#       subnet_region         = var.region
-#       description           = "${i.name} subnet"
-#       subnet_private_access = true
-#     }
-#   ]
-# }
 
-# module "iap_bastion" {
-#   source  = "terraform-google-modules/bastion-host/google"
-#   version = "6.0.0"
+module "subnets" {
+  source  = "terraform-google-modules/network/google//modules/subnets"
+  version = "~> 9.1"
 
-#   project               = var.project
-#   zone                  = "${var.region}-a"
-#   network               = module.vpc.network_self_link
-#   subnet                = [for i, j in module.subnets.subnets : j.self_link][0]
-#   service_account_email = data.terraform_remote_state.local.outputs.service_account_email
-#   members               = values(data.terraform_remote_state.local.outputs.service_accounts)
-#   machine_type          = var.machine_type
-#   disk_size_gb          = var.disk_size_gb
-#   startup_script        = templatefile("${path.module}/startup.sh", {})
-#   labels                = var.labels
+  project_id   = var.project
+  network_name = module.vpc.network_name
 
-# }
+  subnets = [for i in var.subnets :
+    {
+      subnet_name           = i.name
+      subnet_ip             = i.cidr
+      subnet_region         = var.region
+      description           = "${i.name} subnet"
+      subnet_private_access = i.purpose == "REGIONAL_MANAGED_PROXY" || i.purpose == "GLOBAL_MANAGED_PROXY" ? false : true
+      purpose               = i.purpose
+      role                  = i.purpose == "REGIONAL_MANAGED_PROXY" || i.purpose == "GLOBAL_MANAGED_PROXY" ? "ACTIVE" : null
+    }
+  ]
+}
 
-# resource "google_compute_firewall" "allow_access_from_bastion" {
-#   project = var.project
-#   name    = "allow-bastion-ssh"
-#   network = module.vpc.network_self_link
+resource "google_compute_address" "lb_internal_ip" {
+  name         = "${var.prefix}-lb-internal-ip"
+  subnetwork   = [for i, j in module.subnets.subnets : j.self_link][0]
+  address_type = "INTERNAL"
+  address      = cidrhost([for i, j in var.subnets : j.cidr][0], -4)
+  region       = [for i, j in module.subnets.subnets : j.region][0]
+}
 
-#   allow {
-#     protocol = "tcp"
-#     ports    = ["22"]
-#   }
+module "iap_bastion" {
+  source  = "terraform-google-modules/bastion-host/google"
+  version = "6.0.0"
 
-#   # Allow SSH only from IAP Bastion
-#   source_service_accounts = [module.iap_bastion.service_account]
-# }
+  project               = var.project
+  zone                  = "${var.region}-a"
+  network               = module.vpc.network_self_link
+  subnet                = [for i, j in module.subnets.subnets : j.self_link][0]
+  service_account_email = data.terraform_remote_state.local.outputs.service_account_email
+  members               = values(data.terraform_remote_state.local.outputs.service_accounts)
+  machine_type          = var.machine_type
+  disk_size_gb          = var.disk_size_gb
+  startup_script        = templatefile("${path.module}/startup.sh", {})
+  labels                = var.labels
 
-# module "cloud-nat" {
-#   source                             = "terraform-google-modules/cloud-nat/google"
-#   version                            = "~> 5.0"
-#   project_id                         = var.project
-#   region                             = var.region
-#   router                             = google_compute_router.router.name
-#   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-# }
+}
 
-# resource "google_compute_router" "router" {
-#   project = var.project
-#   name    = "${var.network_name}-nat-router"
-#   network = module.vpc.network_name
-#   region  = var.region
-# }
+resource "google_compute_firewall" "allow_access_from_bastion" {
+  project = var.project
+  name    = "allow-bastion-ssh"
+  network = module.vpc.network_self_link
 
-# module "private_service_connect" {
-#   source  = "terraform-google-modules/network/google//modules/private-service-connect"
-#   version = "~> 9.0"
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
 
-#   project_id                 = var.project
-#   network_self_link          = module.vpc.network_self_link
-#   private_service_connect_ip = "10.3.0.5"
-#   forwarding_rule_target     = "all-apis"
-# }
+  # Allow SSH only from IAP Bastion
+  source_service_accounts = [module.iap_bastion.service_account]
+}
+
+module "cloud-nat" {
+  source                             = "terraform-google-modules/cloud-nat/google"
+  version                            = "~> 5.0"
+  project_id                         = var.project
+  region                             = var.region
+  router                             = google_compute_router.router.name
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+}
+
+resource "google_compute_router" "router" {
+  project = var.project
+  name    = "${var.network_name}-nat-router"
+  network = module.vpc.network_name
+  region  = var.region
+}
+
 
 resource "google_storage_bucket_object" "upload" {
   name         = "file.conf"
