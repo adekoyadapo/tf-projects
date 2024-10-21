@@ -4,7 +4,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 8.15.3
+  version: 8.15.0
   monitoring:
     metrics:
       elasticsearchRefs:
@@ -12,13 +12,9 @@ spec:
     logs:
       elasticsearchRefs:
       - name: elasticsearch
-  # transport:
-  #   tls:
-  #     certificateAuthorities:
-  #       configMapName: remote-certs
   nodeSets:
   - name: main
-    count: 2
+    count: 1
     podTemplate:
       spec:
         initContainers:
@@ -30,24 +26,11 @@ spec:
         volumes:
         - name: elasticsearch-data
           emptyDir: {}
-        containers:
-        - name: elasticsearch
-          resources:
-            requests:
-              memory: 4Gi
-              cpu: 2
-            limits:
-              memory: 8Gi
-              cpu: 4
     config:
       xpack.security.audit.enabled: false
-      xpack.security.enrollment.enabled: false
       node.store.allow_mmap: false
       xpack.security.transport.ssl.verification_mode: 'none'
-  http:
-    tls:
-      selfSignedCertificate:
-        disabled: true
+
   auth:
     disableElasticUser: true
     fileRealm:

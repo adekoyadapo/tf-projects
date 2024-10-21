@@ -75,3 +75,19 @@ variable "iap_oauth2_client_name" {
   type        = string
   default     = "iap-client-cloudrun"
 }
+
+variable "apm_token" {
+  description = "APM server token"
+  type        = string
+}
+
+
+variable "apm_server" {
+  description = "APM server"
+  type        = string
+}
+
+variable "apm-service" {
+  description = "apm service name"
+  default     = "search-app"
+}

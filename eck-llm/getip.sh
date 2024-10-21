@@ -21,13 +21,21 @@ ip_to_sslip() {
     echo "$1" | tr '.' '-'
 }
 
+# Function to calculate network address based on /24 mask
+get_network_address() {
+    ip="$1"
+    IFS='.' read -r -a octets <<< "$ip"
+    echo "${octets[0]}.${octets[1]}.${octets[2]}.0/24"
+}
+
 # Main script
 cluster_name="$1"
 private_ip=$(get_private_ip)
 
 if [[ -n "$private_ip" ]]; then
     sslip_io=$(ip_to_sslip "$private_ip").sslip.io
-    echo "{\"sslip_io\": \"$sslip_io\"}"
+    private_network=$(get_network_address "$private_ip")
+    echo "{\"sslip_io\": \"$sslip_io\", \"private_network\": \"$private_network\"}"
 else
     echo "{\"error\": \"Failed to retrieve private IP address.\"}"
 fi

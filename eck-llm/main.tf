@@ -5,14 +5,22 @@ locals {
       domain   = data.external.getip.result.sslip_io
       username = var.username
       password = htpasswd_password.hash.sha256
+      start_ip = local.start_ip
+      end_ip   = local.end_ip
     })
-    # if fn != "fleet.yml" # Skip the fleet.yml file
+    # if !(fn == "metallb.yml" && local.create_metallb)
   }
+
+  end_host = var.start_host + 20
+  start_ip = cidrhost(data.external.getip.result.private_network, var.start_host)
+  end_ip   = cidrhost(data.external.getip.result.private_network, local.end_host)
+
+  create_metallb = contains([for i in var.helm_release : i], "metallb")
 }
 
 
 resource "random_password" "password" {
-  length           = 30
+  length           = 2
   special          = false
   override_special = "!#$%&*()-_=+[]{}<>:?@"
 }
@@ -32,18 +40,18 @@ resource "minikube_cluster" "cluster" {
   vm                = true
   driver            = "qemu"
   cluster_name      = var.cluster_name
-  nodes             = 2
+  nodes             = 1
   cni               = "bridge"
   network           = "socket_vmnet"
   container_runtime = "cri-o"
   delete_on_failure = true
-  memory            = "16gb"
-  cpus              = 8
+  memory            = "24gb"
+  cpus              = 12
   addons = [
-    "dashboard",
     "ingress",
     "storage-provisioner",
-    "default-storageclass"
+    "default-storageclass",
+    "metrics-server"
   ]
 }
 
@@ -62,7 +70,7 @@ resource "helm_release" "charts" {
   version          = each.value.version
   create_namespace = true
 
-  values  = fileexists("${path.module}/values/${each.key}.yaml") ? templatefile("${path.module}/values/${each.key}.yaml", ) : null
+  values  = fileexists("${path.module}/values/${each.key}.yml") ? [templatefile("${path.module}/values/${each.key}.yml", )] : null
   timeout = 120
 
   dynamic "set" {
@@ -109,14 +117,14 @@ resource "time_sleep" "wait" {
 }
 
 data "http" "upload_data" {
-  count  = length(regexall("quickstart|non", var.dir)) > 0 ? 1 : 0
-  url    = "http://${data.kubernetes_ingress_v1.es[0].spec.0.rule.0.host}/_bulk"
+  count  = length(regexall("quickstart|non", var.dir)) > 0 && var.upload_data ? 1 : 0
+  url    = length(regexall("non", var.dir)) > 0 ? "http://${data.kubernetes_ingress_v1.es[0].spec.0.rule.0.host}/_bulk" : "https://${data.kubernetes_ingress_v1.es[0].spec.0.rule.0.host}/_bulk"
   method = "POST"
   request_headers = {
     Content-Type  = "application/x-ndjson"
     Authorization = "Basic ${base64encode("${var.username}:${htpasswd_password.hash.sha256}")}"
   }
-
+  insecure = true
   retry {
     attempts = 5
   }

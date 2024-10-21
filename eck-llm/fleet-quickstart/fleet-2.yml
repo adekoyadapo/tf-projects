@@ -4,7 +4,7 @@ kind: Agent
 metadata: 
   name: elastic-agent
 spec:
-  version: 8.15.0
+  version: 8.15.2
   kibanaRef:
     name: kibana
   fleetServerRef: 

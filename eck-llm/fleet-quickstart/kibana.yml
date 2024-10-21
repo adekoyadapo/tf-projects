@@ -11,10 +11,12 @@ spec:
     logs:
       elasticsearchRefs:
       - name: elasticsearch
-  version: 8.15.0
+  version: 8.15.2
   count: 1
   elasticsearchRef:
     name: elasticsearch
+  enterpriseSearchRef:
+    name: enterprise-search
   podTemplate:
     spec:
       containers:

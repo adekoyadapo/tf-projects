@@ -101,7 +101,18 @@ resource "google_cloud_run_v2_service" "main" {
         name  = "AZURE_OPENAI_DEPLOYMENT_NAME"
         value = var.azure_openai_deployment_name
       }
-
+      env {
+        name  = "APM_TOKEN"
+        value = var.apm_token
+      }
+      env {
+        name  = "APM_SERVER_URL"
+        value = var.apm_server
+      }
+      env {
+        name  = "APM_SERVICE_NAME"
+        value = var.apm-service
+      }
       resources {
         limits = {
           memory = "512Mi"

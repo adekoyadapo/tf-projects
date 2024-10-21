@@ -11,10 +11,12 @@ spec:
     logs:
       elasticsearchRefs:
       - name: elasticsearch
-  version: 8.15.0
+  version: 8.15.3
   count: 1
   elasticsearchRef:
     name: elasticsearch
+  enterpriseSearchRef:
+    name: enterprise-search
   podTemplate:
     spec:
       containers:
@@ -36,8 +38,8 @@ spec:
         disabled: true   
   config:
     xpack.security.authc.providers.basic.basic1.order: 0
-    xpack.fleet.agents.elasticsearch.hosts: ["http://elasticsearch-es-http.default.svc:9200"]
-    xpack.fleet.agents.fleet_server.hosts: ["http://fleet-server-agent-http.default.svc:8220"]
+    xpack.fleet.agents.elasticsearch.hosts: ["http://es.${domain}:80"]
+    xpack.fleet.agents.fleet_server.hosts: ["http://fleet.${domain}:80"]
     xpack.fleet.packages:
     - name: system
       version: latest

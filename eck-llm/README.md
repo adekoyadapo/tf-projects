@@ -51,10 +51,12 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_image"></a> [cluster\_image](#input\_cluster\_image) | Cluster iamge | `string` | `"rancher/k3s:v1.27.4-k3s1"` | no |
+| <a name="input_cluster_image"></a> [cluster\_image](#input\_cluster\_image) | Cluster iamge | `string` | `"rancher/k3s:v1.30.4-k3s1"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | cluster\_name | `string` | `"demo"` | no |
 | <a name="input_dir"></a> [dir](#input\_dir) | ECK dir | `string` | `"quickstart"` | no |
-| <a name="input_helm_release"></a> [helm\_release](#input\_helm\_release) | Helm realease deployment | <pre>map(object({<br>    repository       = string<br>    chart            = string<br>    namespace        = optional(string, "default")<br>    values           = optional(list(string), [])<br>    create_namespace = optional(bool, true)<br>    version          = optional(string)<br>    set_values = optional(list(object({<br>      name  = string<br>      value = string<br>    })), [])<br>  }))</pre> | <pre>{<br>  "wordpress": {<br>    "chart": "wordpress",<br>    "namespace": "wordpress",<br>    "repository": "oci://registry-1.docker.io/bitnamicharts"<br>  }<br>}</pre> | no |
+| <a name="input_helm_release"></a> [helm\_release](#input\_helm\_release) | Helm realease deployment | <pre>map(object({<br/>    repository       = string<br/>    chart            = string<br/>    namespace        = optional(string, "default")<br/>    values           = optional(list(string), [])<br/>    create_namespace = optional(bool, true)<br/>    version          = optional(string)<br/>    set_values = optional(list(object({<br/>      name  = string<br/>      value = string<br/>    })), [])<br/>  }))</pre> | <pre>{<br/>  "cert-manager": {<br/>    "chart": "cert-manager",<br/>    "create_namespace": true,<br/>    "namespace": "cert-manager",<br/>    "repository": "https://charts.jetstack.io",<br/>    "set_values": [<br/>      {<br/>        "name": "crds.enabled",<br/>        "value": true<br/>      }<br/>    ],<br/>    "version": "1.15.3"<br/>  },<br/>  "elastic-operator": {<br/>    "chart": "eck-operator",<br/>    "create_namespace": true,<br/>    "namespace": "elastic-system",<br/>    "repository": "https://helm.elastic.co",<br/>    "version": "2.14.0"<br/>  }<br/>}</pre> | no |
+| <a name="input_start_host"></a> [start\_host](#input\_start\_host) | start host | `number` | `50` | no |
+| <a name="input_upload_data"></a> [upload\_data](#input\_upload\_data) | upload the data | `bool` | `true` | no |
 | <a name="input_username"></a> [username](#input\_username) | default user for elastic | `string` | `"elastic"` | no |
 
 ## Outputs

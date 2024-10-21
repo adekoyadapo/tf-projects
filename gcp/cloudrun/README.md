@@ -37,6 +37,9 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_apm-service"></a> [apm-service](#input\_apm-service) | apm service name | `string` | `"search-app"` | no |
+| <a name="input_apm_server"></a> [apm\_server](#input\_apm\_server) | APM server | `string` | n/a | yes |
+| <a name="input_apm_token"></a> [apm\_token](#input\_apm\_token) | APM server token | `string` | n/a | yes |
 | <a name="input_azure_openai_api_key"></a> [azure\_openai\_api\_key](#input\_azure\_openai\_api\_key) | Azure OpenAI API Key value | `string` | n/a | yes |
 | <a name="input_azure_openai_deployment_name"></a> [azure\_openai\_deployment\_name](#input\_azure\_openai\_deployment\_name) | Azure OpenAI Deployment Name value | `string` | n/a | yes |
 | <a name="input_azure_openai_endpoint"></a> [azure\_openai\_endpoint](#input\_azure\_openai\_endpoint) | Azure OpenAI Endpoint value | `string` | n/a | yes |
@@ -47,7 +50,7 @@
 | <a name="input_iap_email"></a> [iap\_email](#input\_iap\_email) | IAP Email value | `string` | `"ade.adekoya@elastic.co"` | no |
 | <a name="input_iap_oauth2_client_name"></a> [iap\_oauth2\_client\_name](#input\_iap\_oauth2\_client\_name) | IAP OAuth2 Client Name value | `string` | `"iap-client-cloudrun"` | no |
 | <a name="input_image_url"></a> [image\_url](#input\_image\_url) | The container image URL | `string` | n/a | yes |
-| <a name="input_labels"></a> [labels](#input\_labels) | n/a | `map(string)` | <pre>{<br>  "created_by": "terraform",<br>  "managed_by": "ade"<br>}</pre> | no |
+| <a name="input_labels"></a> [labels](#input\_labels) | n/a | `map(string)` | <pre>{<br/>  "created_by": "terraform",<br/>  "managed_by": "ade"<br/>}</pre> | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | n/a | `string` | `"elb"` | no |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |

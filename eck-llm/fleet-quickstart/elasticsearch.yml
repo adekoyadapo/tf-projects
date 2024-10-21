@@ -4,7 +4,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 8.15.0
+  version: 8.15.2
   monitoring:
     metrics:
       elasticsearchRefs:
@@ -14,7 +14,7 @@ spec:
       - name: elasticsearch
   nodeSets:
   - name: main
-    count: 1
+    count: 2
     podTemplate:
       spec:
         initContainers:
@@ -26,6 +26,15 @@ spec:
         volumes:
         - name: elasticsearch-data
           emptyDir: {}
+        containers:
+        - name: elasticsearch
+          resources:
+            requests:
+              memory: 4Gi
+              cpu: 2
+            limits:
+              memory: 8Gi
+              cpu: 5
     config:
       xpack.security.audit.enabled: false
       node.store.allow_mmap: false
